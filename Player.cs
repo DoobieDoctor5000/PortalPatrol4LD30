@@ -13,6 +13,10 @@ namespace PortalPatrol
         #region Triggers
         public bool exists = false;
         public bool finishedIntro = false;
+        public bool enteredLab = false;
+        public bool blueClothesOn = false;
+        public bool blueShellUp = false;
+        public bool startingAgain = false;
         #endregion
     }
 

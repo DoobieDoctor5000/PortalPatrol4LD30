@@ -21,8 +21,60 @@ What would you like to do?:"); // Acquire input after this prompt.
         public void Dialogue2()
         {
             Console.Clear();
-            Console.WriteLine(@"
-Insert next scene here.");
+            Console.Write(@"
+You arrive at the laboratory to see one person in a lab coat.
+There's a faint");
+            QuickTextColor(ConsoleColor.Blue);
+            Console.Write(@"portal in the middle of
+the room.  It seems as though this scientist has been waiting
+for you to arrive.  He approaches.
+
+Scientist:""So, you're the new detective, huh?  Well, we're
+kind of in a hurry right now, but do you have any questions
+before I send you on your way?"""); // prompt for questions
+            Console.WriteLine();
+        }
+        public void Dialogue3()
+        {
+            Console.Clear();
+            Console.Write(@"
+""OK then!  Let's get the show on the road! Go ahead and put
+on your blue uniform, shell-up, and hop into this");
+            QuickTextColor(ConsoleColor.Blue);
+            Console.Write(@"portal
+you see in the middle of the room.""
+
+What will you do?"); // aquire input
+            Console.WriteLine();
+            //EnterToContinue();
+        }
+
+        public void Dialogue4()
+        {
+            Console.Clear();
+            Console.Write(@"
+The scientist doesn't seem to notice, or care,
+while you disrobe and put the set of blue clothes
+on.
+
+What would you like to do now?
+");
+        }
+
+        public void Dialogue5()
+        {
+            Console.Clear();
+            Console.Write(@"
+You activate your");
+            QuickTextColor(ConsoleColor.Blue);
+            Console.Write(@"encapsulation shell and the
+scientist smiles.
+
+Scientist: ""Looks like you know what you're doing.
+OK well get on with it!  Enter the portal!""
+
+What would you like to do?:
+");
         }
 
         static void EnterToContinue()

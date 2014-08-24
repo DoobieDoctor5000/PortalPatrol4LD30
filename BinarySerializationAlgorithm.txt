@@ -1,0 +1,77 @@
+﻿This is a brief overview of what I've learned about binary serialization, and will be used as a
+reference during the creation of this game.  Sometimes it helps me just flesh everything out like
+this before I move on and try to implement something new (or at least new to me).
+
+To "save" a class, I need to serialize it.  The steps for serializing a class are:
+* Declare the class to be serializable.  Example:
+
+	[Serializable]
+	public class Player
+	{
+	}
+* Instantiate the class.
+* Implement the actual serialization.  Example code:
+
+	IFormatter formatter = new BinaryFormatter();
+    stream = new FileStream("Player.bin", FileMode.Create, FileAccess.Write, FileShare.None);
+    formatter.Serialize(stream, player);
+    stream.Close();
+
+	Important notes about the above code:
+	* using System.Runtime.Serialization is REQUIRED for the use of IFormatter
+	* using System.Runtime.Serialization.Formatters.Binary is REQUIRED for the use of BinaryFormatter
+	* using System.IO is REQUIRED for use of Stream
+	* stream is previously declared and initialized as null (Stream stream = null;)
+	* It is VERY important to close stream after each use!
+
+To "load" a class, I must deserialize it.  This is a bit tricky, as classes are automatically set to
+default when declared, and also there are times when there is nothing to deserialize (either the file
+doesn't exist or is blank).  To get past these hurdles I give the class that I am going to serialize an
+"exists" boolean property.  Then, before deserialization, I check to see if the file actually exists.
+For example:
+
+	if (File.Exists("Player.bin"))
+	{
+	}
+
+Then, within that block of code, I'll run the deserialization within a try block.  Example:
+
+	try
+    {
+        IFormatter formatter = new BinaryFormatter();
+        stream = new FileStream("Player.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
+        player = (Player)formatter.Deserialize(stream);
+        stream.Close();
+    }
+
+The file should exist because of the initial if block, so that shouldn't be a problem.  However, if the
+file is blank, the deserialization will throw a SerializationException error, AND keep the stream open.
+To counteract that, we'll need to follow the try block with a catch block that catches the specific
+error.  For example:
+
+	catch (SerializationException)
+	{
+	}
+
+As we already know, in this case the file exists but is empty.  If the file has no information for the
+class, then it's safe to set the "exists" property of the class to false.  However, we still need to
+close that stream!  We'll need to use it to serialize the class and populate the file with information,
+which we cannot do if it's in use by our deserialization code.  So also within our catch block, we'll
+need to determine if the stream is still "null", and if it isn't, to close the stream (if it is null,
+then it's not open).  Here's an example of the full catch block:
+
+	catch (SerializationException)
+    {
+        if (stream != null)
+        {
+            stream.Close();
+        }
+        player.exists = false;
+    }
+
+That's all well and dandy, but what if the file DOESN'T exist?  Well that's easy; we just follow our
+initial if statement testing if it does exist with an else statement, setting the class' "exists" to
+false.
+
+To wrap it up, we will test the class' "exists" state, and if it's false, we'll run our serialization
+code!
